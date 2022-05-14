@@ -27,17 +27,21 @@ public static class DependencyInjection
 	}
 
 	private static IServiceCollection RegisterViewFinder(this IServiceCollection services)
-		=> services.AddSingleton<IViewFinder>(sp =>
-		{
-			var viewFinder = new ViewFinder(sp);
-			return viewFinder;
-		});
+	{
+		return services.AddSingleton<IViewFinder>(sp =>
+			{
+				var viewFinder = new ViewFinder(sp);
+				return viewFinder;
+			});
+	}
 
 	private static IServiceCollection RegisterAllWindows(this IServiceCollection services)
-			=> services.Scan(scan =>
-					scan.FromCallingAssembly()
-						.AddClasses(c => c.AssignableTo<Window>())
-						.UsingRegistrationStrategy(RegistrationStrategy.Skip)
-						.AsSelf()
-						.WithTransientLifetime());
+	{
+		return services.Scan(scan =>
+						scan.FromEntryAssembly()
+							.AddClasses(c => c.AssignableTo<Window>())
+							.UsingRegistrationStrategy(RegistrationStrategy.Skip)
+							.AsSelf()
+							.WithTransientLifetime());
+	}
 }
